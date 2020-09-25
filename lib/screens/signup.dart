@@ -35,18 +35,19 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
           {
             return "Please enter a username";
           }
+        return null;
       },
     );
-    var EmailField =    TextFormField(
+    var emailField =    TextFormField(
       decoration: InputDecoration(labelText: 'Phone no',prefixIcon: Icon(CustomIcons.phone_handset,size: _iconSize,)),
     );
-    var PhoneNoField =  TextFormField(
+    var phoneNoField =  TextFormField(
       decoration: InputDecoration(labelText: 'Email',prefixIcon: Icon(CustomIcons.mail,size: _iconSize,)),
     );
-    var PasswordField =    TextFormField(
+    var passwordField =    TextFormField(
       decoration: InputDecoration(labelText: 'Password',prefixIcon: Icon(CustomIcons.lock,size: _iconSize,),),
     );
-    var RegisterButton =     Container(
+    var registerButton =     Container(
       margin: EdgeInsets.symmetric(horizontal: 24),
       width: double.infinity,
       height: 50,
@@ -59,7 +60,10 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
         child: Text("Register",style: TextStyle(color: Colors.white),),
       ),
     );
-    var BackButton = InkWell(child: Text("Go Back",style: TextStyle(fontSize: 16,color: Colors.black54),)
+    var backButton = InkWell(child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text("Go Back",style: TextStyle(fontSize: 16,color: Colors.black54),),
+    )
       , onTap: (){
         Navigator.pop(context);
       },
@@ -105,18 +109,18 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
                         children: [
                           UserNameField,
                           SizedBox(height: _fieldSpacingHeight,),
-                          EmailField,
+                          emailField,
                           SizedBox(height: _fieldSpacingHeight,),
-                          PhoneNoField,
+                          phoneNoField,
                           SizedBox(height: _fieldSpacingHeight,),
-                          PasswordField,
+                          passwordField,
                         ],
                       ),
                     ),
                     SizedBox(height: 36,),
-                    RegisterButton,
+                    registerButton,
                     SizedBox(height: 16,),
-                    BackButton
+                    backButton
                   ],
                 ),
               ),

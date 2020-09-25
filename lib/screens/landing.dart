@@ -49,7 +49,9 @@ class _LandingScreenState extends State<LandingScreen>
                     child: RaisedButton(
                       color: Colors.white,
                       shape: StadiumBorder(),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/navigation_screen");
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -67,12 +69,17 @@ class _LandingScreenState extends State<LandingScreen>
                     child: RaisedButton(
                       color: Colors.black,
                       shape: StadiumBorder(),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/login");
+                      },
                       child: Text("Login with OTP",style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   SizedBox(height: 24,),
-                  InkWell(child: Text("Don't have an account ?",style: TextStyle(fontSize: 16,color: Colors.black54),),
+                  GestureDetector(child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text("Don't have an account ?",style: TextStyle(fontSize: 16,color: Colors.black54),),
+                  ),
                   onTap: (){
                     Navigator.pushNamed(context, "/signup");
                   },

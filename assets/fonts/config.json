@@ -1,0 +1,64 @@
+{
+  "name": "CustomIcons",
+  "css_prefix_text": "",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "4bbdccd2dd2c02c55a8ec9a20dc50ee8",
+      "css": "phone-handset",
+      "code": 59440,
+      "src": "linearicons"
+    },
+    {
+      "uid": "91bac16b22827347e9ee20477f0b44d2",
+      "css": "mail",
+      "code": 59392,
+      "src": "linecons"
+    },
+    {
+      "uid": "56a0672588820ab1a16363e5d07dd22e",
+      "css": "user",
+      "code": 59393,
+      "src": "linecons"
+    },
+    {
+      "uid": "d7df8d878570b378b7d928049f29cb50",
+      "css": "lock",
+      "code": 59407,
+      "src": "linearicons"
+    },
+    {
+      "uid": "2cc97ae9bea37bcaf9fb726816c2b2a7",
+      "css": "cart",
+      "code": 59438,
+      "src": "linearicons"
+    },
+    {
+      "uid": "5eb43711f62fb4dcbef10d0224c28065",
+      "css": "th-thumb-empty",
+      "code": 61451,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "z2kx6nr3u9112p0e1pfhxdhva9v7kd4k",
+      "css": "tag",
+      "code": 59394,
+      "src": "typicons"
+    },
+    {
+      "uid": "9e717a7080503cfe84c7c7bd336ffe5f",
+      "css": "wrench-outline",
+      "code": 59395,
+      "src": "typicons"
+    },
+    {
+      "uid": "2hqh2lidoqvaujgq29tdkrtiay5s6tyk",
+      "css": "chat",
+      "code": 59396,
+      "src": "typicons"
+    }
+  ]
+}

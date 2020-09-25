@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:max_food/screens/landing.dart';
 import 'package:max_food/screens/login.dart';
+import 'package:max_food/screens/nav_drawer.dart';
 import 'package:max_food/screens/signup.dart';
 
 void main() {
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => LandingScreen(),
           '/signup': (context) => SignUpScreen(),
           '/login': (context) => LoginScreen(),
+          '/navigation_screen': (context) => MainNavDrawer(),
         },
     );
   }
