@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         routes: {
-          '/': (context) => LandingScreen(),
+          '/': (context) => MainNavDrawer(),
           '/signup': (context) => SignUpScreen(),
           '/login': (context) => LoginScreen(),
           '/navigation_screen': (context) => MainNavDrawer(),
