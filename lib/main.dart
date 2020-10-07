@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:max_food/screens/landing.dart';
 import 'package:max_food/screens/login.dart';
 import 'package:max_food/screens/nav_drawer.dart';
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+//          textTheme: GoogleFonts.montserratTextTheme(
+//            Theme.of(context).textTheme,
+//          ),
         ),
         routes: {
           '/': (context) => MainNavDrawer(),

@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
 
 class MainNavDrawer extends StatefulWidget {
@@ -45,84 +46,85 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SafeArea(
-          child: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Center(
-                child: Row(
-                  children: [
-                    Container(
-                      height: 70,
-                      width: 70,
-                      child: Material(
-                        // with Material
-                        child: Image.network(
-                            "https://avatars1.githubusercontent.com/u/25644101?s=460&u=b4499013c5fe038fcab816722756f8e3e8cb1485&v=4"),
-                        elevation: 18.0,
-                        shape: CircleBorder(),
-                        clipBehavior: Clip.antiAlias,
+        drawer: SafeArea(
+            child: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Center(
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 70,
+                        width: 70,
+                        child: Material(
+                          // with Material
+                          child: Image.network(
+                              "https://avatars1.githubusercontent.com/u/25644101?s=460&u=b4499013c5fe038fcab816722756f8e3e8cb1485&v=4"),
+                          elevation: 18.0,
+                          shape: CircleBorder(),
+                          clipBehavior: Clip.antiAlias,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Niaz Ahmed",
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
-                        Text(
-                          "itsniaz@gmail.com",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    )
-                  ],
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Niaz Ahmed",
+                            style:
+                                TextStyle(fontSize: 16, color: Colors.black54),
+                          ),
+                          Text(
+                            "itsniaz@gmail.com",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  image: new DecorationImage(
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      image: AssetImage("assets/images/bg_landing.jpg")),
                 ),
               ),
-              decoration: BoxDecoration(
-                image: new DecorationImage(
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    image: AssetImage("assets/images/bg_landing.jpg")),
+              ListTile(
+                leading: _menuCircle(CustomIcons.th_thumb_empty),
+                title: _menuText("My Orders"),
               ),
-            ),
-            ListTile(
-              leading: _menuCircle(CustomIcons.th_thumb_empty),
-              title: _menuText("My Orders"),
-            ),
-            ListTile(
-              leading: _menuCircle(CustomIcons.tag),
-              title: _menuText("Offer"),
-            ),
-            ListTile(
-              leading: _menuCircle(CustomIcons.chat),
-              title: _menuText("Support"),
-            ),
-            ListTile(
-              leading: _menuCircle(CustomIcons.wrench_outline),
-              title: _menuText("Settings"),
-            ),
-          ],
+              ListTile(
+                leading: _menuCircle(CustomIcons.tag),
+                title: _menuText("Offer"),
+              ),
+              ListTile(
+                leading: _menuCircle(CustomIcons.chat),
+                title: _menuText("Support"),
+              ),
+              ListTile(
+                leading: _menuCircle(CustomIcons.wrench_outline),
+                title: _menuText("Settings"),
+              ),
+            ],
+          ),
+        )),
+        appBar: AppBar(
+          title: Text("Menu"),
+          centerTitle: true,
+          actions: [_shoppingCartBadge()],
         ),
-      )),
-      appBar: AppBar(
-        title: Text("Menu"),
-        centerTitle: true,
-        actions: [_shoppingCartBadge()],
-      ),
-      body: SafeArea(
+        body: SafeArea(
           child: _landingPage(),
-    ));
+        ));
   }
 
   Widget _shoppingCartBadge() {
@@ -163,115 +165,183 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
     );
   }
 
-  _landingPage()
-  {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        SizedBox(
-          height: 8,
-        ),
-        CarouselSlider.builder(
-          options: CarouselOptions(
-            aspectRatio: 16 / 7,
-            initialPage: 0,
-            enableInfiniteScroll: true,
-            reverse: false,
-            autoPlay: true,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
-            autoPlayCurve: Curves.fastOutSlowIn,
-            enlargeCenterPage: false,
-            scrollDirection: Axis.horizontal,
+  _landingPage() {
+    return Container(
+      color: Color(0xF2F3F7),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 8,
           ),
-          itemCount: sliderImages.length,
-          itemBuilder: (BuildContext context, int itemIndex) => AspectRatio(
+          CarouselSlider.builder(
+            options: CarouselOptions(
               aspectRatio: 16 / 7,
-              child: Card(
-                  child: Image.network(
-                    sliderImages[itemIndex],
-                    fit: BoxFit.cover,
-                  ))),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.all(8.0),
-                color: Colors.white70,
-                child: Column(
-                  children: [
-                    Image.network(
-                      categoryImages[0],
-                      height: 120,
-                      width: 120,
-                    ),
-                    Text(categoryNames[0])
-                  ],
-                ),
-              ),
+              initialPage: 0,
+              enableInfiniteScroll: true,
+              reverse: false,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 3),
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              enlargeCenterPage: false,
+              scrollDirection: Axis.horizontal,
             ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.all(8.0),
-                color: Colors.white70,
-                child: Column(
-                  children: [
-                    Image.network(
-                      categoryImages[1],
-                      height: 120,
-                      width: 120,
-                    ),
-                    Text(categoryNames[1])
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        GridView.count(
-            shrinkWrap: true,
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
-            crossAxisCount: 3,
-            // Generate 100 widgets that display their index in the List.
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              for (int x = 2; x < categoryNames.length; x++)
-                Column(
-                  children: [
-                    Container(
-                      color: Colors.white70,
-                      margin: EdgeInsets.all(8.0),
-                      padding: EdgeInsets.all(8.0),
-                      child: AspectRatio(
-                        aspectRatio: 3 / 2,
-                        child: FadeInImage(
-                          placeholder: NetworkImage(categoryImages[x]),
-                          image: NetworkImage(categoryImages[x]),
-                        ),
-                      ),
-                    ),
-                    Text(categoryNames[x])
-                  ],
-                )
-            ]),
-        SizedBox(
-          height: 16,
-        ),
-        AspectRatio(
-            aspectRatio: 16 / 5,
-            child: Card(
-                child: Image.network(
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQEvPOoCxMvFaV0-U1V_gnM268IPy7RzyJ36g&usqp=CAU",
+            itemCount: sliderImages.length,
+            itemBuilder: (BuildContext context, int itemIndex) => AspectRatio(
+                aspectRatio: 16 / 7,
+                child: Card(
+                    child: Image.network(
+                  sliderImages[itemIndex],
                   fit: BoxFit.cover,
                 ))),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin:
+                  EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "EXPLORE MENU",
+                        style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
+                      ),
+                      Spacer(),
+                      Text(
+                        "VIEW ALL",
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Container(
+                      height: 220,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Category(categoryNames[0],categoryImages[0])
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Category(categoryNames[1],categoryImages[1])
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      child: Category(categoryNames[2],categoryImages[2]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      child: Category(categoryNames[3],categoryImages[3]),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      child: Category(categoryNames[4],categoryImages[4]),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                SizedBox(
+                  height: 12,
+                ),
+                Container(
+                    margin: EdgeInsets.only(left : 16.0,top: 8.0,bottom: 4.0),
+                    child: Text(
+                      "BESTSELLERS",
+                      style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
+                    )),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12.0,vertical: 4.0),
+                  width: double.infinity,
+                  height: 190,
+                  child: ListView.separated(
+                      separatorBuilder: (ctx,index) => SizedBox(width: 2,),
+                      scrollDirection: Axis.horizontal,shrinkWrap: true,physics: BouncingScrollPhysics(),itemCount : 5,itemBuilder: (ctx,index){
+                    return Container(
+                      width: 140,
+                      height: 190,
+                      child: Card(
+                        child: Center(
+                          child: Text("Hot Item ${index+1}"),
+                        ),
+                      ),
+                    );
+                  }),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+
+  }
+
+  Category(String categoryName,String imageUrl){
+    return Stack(
+      children: [
+        Container(
+          height: double.infinity,
+          width: double.infinity,
+          child: Card(
+            color: Colors.white,
+            margin: EdgeInsets.symmetric(vertical : 4.0,horizontal: 2.0),
+            elevation: 1.0,
+
+            child: Container(margin: EdgeInsets.only(top : 24.0,right: 24,bottom: 8.0,left: 8.0),child: Image.network(imageUrl,width: 10,)),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Container(child: Text(categoryName.toUpperCase(),style: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),),margin: EdgeInsets.only(top: 12.0,right: 12.0),),
+        ),
+
+
       ],
     );
   }
+  
+
 }
