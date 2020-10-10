@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:max_food/screens/menu.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
 
 class MainNavDrawer extends StatefulWidget {
@@ -168,7 +169,7 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
   _landingPage() {
     return Container(
       color: Color(0xF2F3F7),
-      child: Column(
+      child: ListView(
         children: [
           SizedBox(
             height: 8,
@@ -195,120 +196,144 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
                   fit: BoxFit.cover,
                 ))),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin:
-                  EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        "EXPLORE MENU",
-                        style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
-                      ),
-                      Spacer(),
-                      Text(
-                        "VIEW ALL",
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Container(
-                      height: 220,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Category(categoryNames[0],categoryImages[0])
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Category(categoryNames[1],categoryImages[1])
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      child: Category(categoryNames[2],categoryImages[2]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      child: Category(categoryNames[3],categoryImages[3]),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      child: Category(categoryNames[4],categoryImages[4]),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
-                SizedBox(
-                  height: 12,
-                ),
-                Container(
-                    margin: EdgeInsets.only(left : 16.0,top: 8.0,bottom: 4.0),
-                    child: Text(
-                      "BESTSELLERS",
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin:
+                EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "EXPLORE MENU",
                       style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
-                    )),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12.0,vertical: 4.0),
-                  width: double.infinity,
-                  height: 190,
-                  child: ListView.separated(
-                      separatorBuilder: (ctx,index) => SizedBox(width: 2,),
-                      scrollDirection: Axis.horizontal,shrinkWrap: true,physics: BouncingScrollPhysics(),itemCount : 5,itemBuilder: (ctx,index){
-                    return Container(
-                      width: 140,
-                      height: 190,
-                      child: Card(
-                        child: Center(
-                          child: Text("Hot Item ${index+1}"),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MenuRoute()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left : 8.0,top: 8.0,bottom: 8.0),
+                        child: Text(
+                          "VIEW ALL",
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                         ),
                       ),
-                    );
-                  }),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Container(
+                    height: 220,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Category(categoryNames[0],categoryImages[0])
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Category(categoryNames[1],categoryImages[1])
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    child: Category(categoryNames[2],categoryImages[2]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    child: Category(categoryNames[3],categoryImages[3]),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    child: Category(categoryNames[4],categoryImages[4]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              SizedBox(
+                height: 12,
+              ),
+
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 12.0),
+                child: AspectRatio(
+                  aspectRatio: 8/3,
+                  child: Card(
+                    color: Colors.redAccent,
+                    child: Center(child: Text("Banner Here",style: TextStyle(color: Colors.white,fontSize: 18),)),
+                  ),
                 )
-              ],
-            ),
+              ),
+
+              SizedBox(
+                height: 12,
+              ),
+              Container(
+                  margin: EdgeInsets.only(left : 16.0,top: 8.0,bottom: 4.0),
+                  child: Text(
+                    "BESTSELLERS",
+                    style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),
+                  )),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 12.0,vertical: 4.0),
+                width: double.infinity,
+                height: 190,
+                child: ListView.separated(
+                    separatorBuilder: (ctx,index) => SizedBox(width: 2,),
+                    scrollDirection: Axis.horizontal,shrinkWrap: true,physics: BouncingScrollPhysics(),itemCount : 5,itemBuilder: (ctx,index){
+                  return Container(
+                    width: 140,
+                    height: 190,
+                    child: Card(
+                      child: Center(
+                        child: Text("Hot Item ${index+1}"),
+                      ),
+                    ),
+                  );
+                }),
+              )
+            ],
           )
         ],
       ),

@@ -24,10 +24,11 @@ class MyApp extends StatelessWidget {
 //          ),
         ),
         routes: {
-          '/': (context) => MainNavDrawer(),
+          '/': (context) => LandingScreen(),
           '/signup': (context) => SignUpScreen(),
           '/login': (context) => LoginScreen(),
           '/navigation_screen': (context) => MainNavDrawer(),
+          '/menu': (context) => MainNavDrawer(),
         },
     );
   }
