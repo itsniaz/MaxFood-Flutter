@@ -211,10 +211,7 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
                     Spacer(),
                     InkWell(
                       onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MenuRoute()),
-                        );
+                        Navigator.pushNamed(context, "/menu");
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(left : 8.0,top: 8.0,bottom: 8.0),

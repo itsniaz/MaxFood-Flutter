@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:max_food/screens/landing.dart';
 import 'package:max_food/screens/login.dart';
+import 'package:max_food/screens/menu.dart';
 import 'package:max_food/screens/nav_drawer.dart';
 import 'package:max_food/screens/signup.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Max Food',
         theme: ThemeData(
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
           '/signup': (context) => SignUpScreen(),
           '/login': (context) => LoginScreen(),
           '/navigation_screen': (context) => MainNavDrawer(),
-          '/menu': (context) => MainNavDrawer(),
+          '/menu': (context) => MenuScreen(),
         },
     );
   }
