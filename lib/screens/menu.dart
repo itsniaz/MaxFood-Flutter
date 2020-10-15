@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:badges/badges.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,6 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   TabController _tabController;
   AnimationController _animationController;
   int favIndex = -1;
-  HashMap cart = new HashMap<String, int>();
 
   @override
   void initState() {
@@ -111,13 +112,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            qty > 0
-                ? Container(
-                    width: double.infinity,
-                    height: 50,
-                    color: Colors.red,
-                  )
-                : Container()
+            cart(qty)
           ],
         ));
   }
@@ -206,8 +201,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Expanded(child: Container()),
-                                      qty > 0
-                                          ? quantityContainer(index)
+                                      index == 1
+                                          ? quantityContainer()
                                           : RaisedButton.icon(
                                               onPressed: () {
                                                 setState(() {
@@ -240,13 +235,13 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     );
   }
 
-  quantityContainer(int index) {
+  quantityContainer() {
     return Row(
       children: [
         qty > 1
             ? InkWell(
                 onTap: () => setState(() {
-                 qty--;
+                  qty--;
                 }),
                 child: Container(
                   padding: EdgeInsets.all(4.0),
@@ -310,5 +305,83 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       ],
     );
   }
+
+  cart(int qty) {
+    return qty > 0
+        ? InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, "/cart");
+          },
+          child: Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 0,
+                    blurRadius: 2,
+                    offset: Offset(0, -2), // changes position of shadow
+                  ),
+                ],
+              ),
+              child:
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          child: Center(
+                            child: AvatarGlow(
+                              endRadius: 60,
+                              glowColor: Colors.red,
+                              child: Badge(
+                                animationDuration: Duration(milliseconds: 500),
+                                animationType: BadgeAnimationType.scale,
+                                badgeColor: Colors.red,
+                                child: Icon(CustomIcons.cart,color: Colors.red,),
+                                badgeContent: Text(
+                                  "$qty",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            "VIEW CART",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            "350 SAR",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+            ),
+        )
+        : Container();
+  }
+
   var qty = 0;
 }

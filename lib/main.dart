@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:max_food/screens/landing.dart';
 import 'package:max_food/screens/login.dart';
 import 'package:max_food/screens/menu.dart';
+import 'package:max_food/screens/cart.dart';
 import 'package:max_food/screens/nav_drawer.dart';
 import 'package:max_food/screens/signup.dart';
 
@@ -20,9 +21,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-//          textTheme: GoogleFonts.montserratTextTheme(
-//            Theme.of(context).textTheme,
-//          ),
+         textTheme: GoogleFonts.latoTextTheme(
+           Theme.of(context).textTheme,
+         ),
         ),
         routes: {
           '/': (context) => LandingScreen(),
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/navigation_screen': (context) => MainNavDrawer(),
           '/menu': (context) => MenuScreen(),
+          '/cart': (context) => CartScreen(),
         },
     );
   }
