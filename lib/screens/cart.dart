@@ -163,13 +163,12 @@ class _CartScreenState extends State<CartScreen>
                   child: FlatButton(
                     color: Colors.red,
                     splashColor: Colors.white,
-                    onPressed: ()=>print("pressed"),
+                    onPressed: ()=> Navigator.pushNamed(context, "/checkout"),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text("PLACE ORDER",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                        Text("CHECKOUT",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                         Image.asset("assets/images/fast_forward.png",width: 24,height: 24,)
-
                       ],
                     ),
                   )

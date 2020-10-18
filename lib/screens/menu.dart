@@ -205,9 +205,10 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                           ? quantityContainer()
                                           : RaisedButton.icon(
                                               onPressed: () {
-                                                setState(() {
-                                                  qty++;
-                                                });
+                                                // setState(() {
+                                                //   qty++;
+                                                // });
+                                                Navigator.pushNamed(context, "/option");
                                               },
                                               icon: Icon(
                                                 Icons.add,

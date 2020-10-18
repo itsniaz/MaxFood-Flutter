@@ -36,6 +36,10 @@
 ///         Author:    Dave Gandy
 ///         License:   SIL (https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt)
 ///         Homepage:  http://fortawesome.github.com/Font-Awesome/
+/// * Font Awesome 4, Copyright (C) 2016 by Dave Gandy
+///         Author:    Dave Gandy
+///         License:   SIL ()
+///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -56,4 +60,5 @@ class CustomIcons {
   static const IconData phone_handset = IconData(0xe830, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData th_thumb_empty = IconData(0xf00b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData plus = IconData(0xf067, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData building = IconData(0xf0f7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

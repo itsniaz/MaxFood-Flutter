@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:max_food/screens/checkout.dart';
 import 'package:max_food/screens/landing.dart';
 import 'package:max_food/screens/login.dart';
 import 'package:max_food/screens/menu.dart';
 import 'package:max_food/screens/cart.dart';
 import 'package:max_food/screens/nav_drawer.dart';
+import 'package:max_food/screens/option.dart';
 import 'package:max_food/screens/signup.dart';
 
 void main() {
@@ -31,7 +33,9 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/navigation_screen': (context) => MainNavDrawer(),
           '/menu': (context) => MenuScreen(),
+          '/option': (context) => OptionScreen(),
           '/cart': (context) => CartScreen(),
+          '/checkout': (context) => CheckoutScreen(),
         },
     );
   }
