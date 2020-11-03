@@ -7,7 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:max_food/network/api_provider.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
+import 'package:max_food/viewmodel/model/menu.dart';
 
 class MenuScreen extends StatefulWidget {
   @override
@@ -21,12 +23,19 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   AnimationController _animationController;
   int favIndex = -1;
 
+  Menu menu;
+
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 5, vsync: this);
     _animationController = AnimationController(vsync: this);
+    ApiProvider.getInstance().getMenu(onMenuFetched: (Menu menu){
+      setState(() {
+        this.menu = menu;
+        _tabController = TabController(length: menu.categories.length, vsync: this);
+      });
+    });
   }
 
   @override
@@ -49,80 +58,62 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                 onPressed: () => print("Pressed Search"))
           ],
         ),
-        body: Column(
-          children: [
-            Container(
-              color: Colors.red,
-              height: 4.0,
-            ),
-            Container(
-              margin: EdgeInsets.all(0),
-              padding: EdgeInsets.all(0),
-              decoration: BoxDecoration(
+        body: menu == null ? Container(child: Center(child: CircularProgressIndicator())):
+       Column(
+            children: [
+              Container(
                 color: Colors.red,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
+                height: 4.0,
               ),
-              child: TabBar(
-                  isScrollable: true,
-                  indicator: new BubbleTabIndicator(
-                    indicatorHeight: 28.0,
-                    indicatorColor: Colors.white,
-                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  labelColor: Colors.red,
-                  unselectedLabelColor: Colors.white,
-                  controller: _tabController,
-                  tabs: [
-                    Tab(
-                      child: Text("DEALS"),
+              Container(
+                margin: EdgeInsets.all(0),
+                padding: EdgeInsets.all(0),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0,
+                      blurRadius: 3,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
-                    Tab(
-                      child: Text("SANDWICH"),
-                    ),
-                    Tab(
-                      child: Text("BURGER"),
-                    ),
-                    Tab(
-                      child: Text("MEAT SANDWICH"),
-                    ),
-                    Tab(
-                      child: Text("SWEET"),
-                    ),
-                  ]),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(top: 0.0),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    categoryItems(),
-                    categoryItems(),
-                    categoryItems(),
-                    categoryItems(),
-                    categoryItems(),
                   ],
                 ),
+                child: TabBar(
+                    isScrollable: true,
+                    indicator: new BubbleTabIndicator(
+                      indicatorHeight: 28.0,
+                      indicatorColor: Colors.white,
+                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                    ),
+                    labelColor: Colors.red,
+                    unselectedLabelColor: Colors.white,
+                    controller: _tabController,
+                    tabs: menu.categories.map((e) => Tab(child: Text(e.name),)).toList()
+
+                ),
               ),
-            ),
-            cart(qty)
-          ],
-        ));
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 0.0),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: menu.categories.map((e) => categoryItems(e)).toList(),
+                  ),
+                ),
+              ),
+              cart(qty)
+            ],
+          ),
+        );
   }
 
-  categoryItems() {
+  Widget categoryItems(Category category) {
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-              itemCount: 10,
+              itemCount: category.items.length,
               itemBuilder: (ctx, index) {
                 return Container(
                     color: Colors.white,
@@ -134,7 +125,10 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                           flex: 1,
                           child: Container(
                             padding: EdgeInsets.all(8.0),
-                            child: Image.asset("assets/images/food1.jpg"),
+                            child: FadeInImage.assetNetwork(
+                              placeholder: 'assets/images/loading.gif',
+                              image: category.items[index].image,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -149,14 +143,13 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Super Mega Deal ${index + 1}",
-                                      style: GoogleFonts.lato(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
                                     Expanded(
-                                      child: Container(),
+                                      child: Text(
+                                        category.items[index].name,
+                                        style: GoogleFonts.lato(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                     ),
                                     InkWell(
                                       onTap: () {
@@ -187,8 +180,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                 SizedBox(
                                   height: 4,
                                 ),
-                                Text(
-                                    "The fried chicken that put MAX Food on the map. As its name indicates, this is the ....."),
+                                Text(category.items[index].description),
                                 SizedBox(
                                   height: 16,
                                 ),
@@ -196,8 +188,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Text(
-                                        "35 SAR",
+                                      Text("SAR ${category.items[index].price}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Expanded(child: Container()),
