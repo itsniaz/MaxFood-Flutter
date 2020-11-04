@@ -3,13 +3,18 @@ import 'dart:collection';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:badges/badges.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:max_food/network/api_provider.dart';
+import 'package:max_food/utils/constants.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
+import 'package:max_food/utils/shared_perference_manager.dart';
+import 'package:max_food/viewmodel/menu_viewmodel.dart';
 import 'package:max_food/viewmodel/model/menu.dart';
+import 'package:provider/provider.dart';
 
 class MenuScreen extends StatefulWidget {
   @override
@@ -22,20 +27,29 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   TabController _tabController;
   AnimationController _animationController;
   int favIndex = -1;
-
+  MenuViewModel _menuViewModel;
   Menu menu;
-
+  List<Category> categories;
   @override
   void initState() {
     super.initState();
 
     _animationController = AnimationController(vsync: this);
-    ApiProvider.getInstance().getMenu(onMenuFetched: (Menu menu){
+    ApiProvider.getInstance().getMenu(onMenuFetched: (Menu menu) {
       setState(() {
         this.menu = menu;
-        _tabController = TabController(length: menu.categories.length, vsync: this);
+        categories = menu.categories;
+        categories.add(Constants.favouriteCategory);
+        _tabController =
+            TabController(length: menu.categories.length, vsync: this);
       });
     });
+
+    // _menuViewModel = Provider.of<MenuViewModel>(context);
+    // categories = _menuViewModel.categories;
+    // _tabController =
+    //     TabController(length: categories.length, vsync: this);
+
   }
 
   @override
@@ -44,68 +58,79 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text("Explore"),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () => print("Pressed Search"))
-          ],
-        ),
-        body: menu == null ? Container(child: Center(child: CircularProgressIndicator())):
-       Column(
-            children: [
-              Container(
-                color: Colors.red,
-                height: 4.0,
-              ),
-              Container(
-                margin: EdgeInsets.all(0),
-                padding: EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 3,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: TabBar(
-                    isScrollable: true,
-                    indicator: new BubbleTabIndicator(
-                      indicatorHeight: 28.0,
-                      indicatorColor: Colors.white,
-                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                    ),
-                    labelColor: Colors.red,
-                    unselectedLabelColor: Colors.white,
-                    controller: _tabController,
-                    tabs: menu.categories.map((e) => Tab(child: Text(e.name),)).toList()
 
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(top: 0.0),
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: menu.categories.map((e) => categoryItems(e)).toList(),
+
+  Widget build(BuildContext context) {
+
+    try {
+      return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              title: Text("Explore"),
+              actions: [
+                IconButton(
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => print("Pressed Search"))
+              ],
+            ),
+            body: menu == null
+                ? Container(child: Center(child: CircularProgressIndicator()))
+                : Column(
+                    children: [
+                      Container(
+                        color: Colors.red,
+                        height: 4.0,
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(0),
+                        padding: EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 0,
+                              blurRadius: 3,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: TabBar(
+                            isScrollable: true,
+                            indicator: new BubbleTabIndicator(
+                              indicatorHeight: 28.0,
+                              indicatorColor: Colors.white,
+                              tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                            ),
+                            labelColor: Colors.red,
+                            unselectedLabelColor: Colors.white,
+                            controller: _tabController,
+                            tabs: categories
+                                .map((e) => Tab(
+                                      child: Text(e.name),
+                                    ))
+                                .toList()),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 0.0),
+                          child: TabBarView(
+                            controller: _tabController,
+                            children:
+                                categories.map((e) => categoryItems(e)).toList(),
+                          ),
+                        ),
+                      ),
+                      cart(qty)
+                    ],
                   ),
-                ),
-              ),
-              cart(qty)
-            ],
-          ),
-        );
+          );
+    } catch (e,stacktrace) {
+      print(stacktrace);
+    }
   }
 
   Widget categoryItems(Category category) {
@@ -115,6 +140,11 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           child: ListView.builder(
               itemCount: category.items.length,
               itemBuilder: (ctx, index) {
+
+                Dish dish =  category.items[index];
+                var filteredDish = Constants.favouriteCategory.items.firstWhere((Dish favDish) => favDish.id == dish.id,orElse: ()=>null);
+                dish.isFav = filteredDish != null;
+
                 return Container(
                     color: Colors.white,
                     margin: EdgeInsets.all(8.0),
@@ -125,9 +155,9 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                           flex: 1,
                           child: Container(
                             padding: EdgeInsets.all(8.0),
-                            child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/images/loading.gif',
-                              image: category.items[index].image,
+                            child: CachedNetworkImage(
+                              placeholder: (ctx,url)=>Image.asset("assets/images/loading.gif"),
+                              imageUrl: dish.image,
                             ),
                           ),
                         ),
@@ -145,7 +175,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        category.items[index].name,
+                                        dish.name,
                                         style: GoogleFonts.lato(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600),
@@ -153,34 +183,32 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        if (favIndex == index) {
-                                          favIndex = -1;
-                                          _animationController.reverse();
-                                        } else {
-                                          favIndex = index;
-                                          _animationController.forward();
+                                        if (dish.isFav) {
+                                          SharedPrefManager.getInstance().removeFromFavourites(dish);
+                                          setState(() {
+                                            dish.isFav = false;
+                                          });
                                         }
+                                        else
+                                          {
+                                            SharedPrefManager.getInstance().addToFavourites(dish);
+                                            setState(() {
+                                              dish.isFav = true;
+                                            });
+                                          }
                                       },
                                       child: Container(
                                           height: 40,
                                           width: 40,
-                                          child: Lottie.asset(
-                                              'assets/lottie_files/favourite.json',
-                                              controller: _animationController,
-                                              onLoaded: (composition) {
-                                            // Configure the AnimationController with the duration of the
-                                            // Lottie file and start the animation.
-                                            _animationController
-                                              ..duration =
-                                                  Duration(milliseconds: 1000);
-                                          }, fit: BoxFit.cover)),
+                                          child: dish.isFav ? Icon(Icons.favorite,color: Colors.red,) : Icon(Icons.favorite_border) ,
+                                      ),
                                     ),
                                   ],
                                 ),
                                 SizedBox(
                                   height: 4,
                                 ),
-                                Text(category.items[index].description),
+                                Text(dish.description),
                                 SizedBox(
                                   height: 16,
                                 ),
@@ -188,7 +216,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                   height: 40,
                                   child: Row(
                                     children: [
-                                      Text("SAR ${category.items[index].price}",
+                                      Text(
+                                        "SAR ${category.items[index].price}",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Expanded(child: Container()),
@@ -199,7 +228,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                                                 // setState(() {
                                                 //   qty++;
                                                 // });
-                                                Navigator.pushNamed(context, "/option");
+                                                Navigator.pushNamed(
+                                                    context, "/option");
                                               },
                                               icon: Icon(
                                                 Icons.add,
@@ -301,10 +331,10 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   cart(int qty) {
     return qty > 0
         ? InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, "/cart");
-          },
-          child: Container(
+            onTap: () {
+              Navigator.pushNamed(context, "/cart");
+            },
+            child: Container(
               width: double.infinity,
               height: 50,
               decoration: BoxDecoration(
@@ -318,60 +348,60 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              child:
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(4.0),
-                          child: Center(
-                            child: AvatarGlow(
-                              endRadius: 60,
-                              glowColor: Colors.red,
-                              child: Badge(
-                                animationDuration: Duration(milliseconds: 500),
-                                animationType: BadgeAnimationType.scale,
-                                badgeColor: Colors.red,
-                                child: Icon(CustomIcons.cart,color: Colors.red,),
-                                badgeContent: Text(
-                                  "$qty",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(4.0),
+                      child: Center(
+                        child: AvatarGlow(
+                          endRadius: 60,
+                          glowColor: Colors.red,
+                          child: Badge(
+                            animationDuration: Duration(milliseconds: 500),
+                            animationType: BadgeAnimationType.scale,
+                            badgeColor: Colors.red,
+                            child: Icon(
+                              CustomIcons.cart,
+                              color: Colors.red,
+                            ),
+                            badgeContent: Text(
+                              "$qty",
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
                       ),
-
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "VIEW CART",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            "350 SAR",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "VIEW CART",
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "350 SAR",
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-        )
+          )
         : Container();
   }
 

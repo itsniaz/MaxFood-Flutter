@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:max_food/viewmodel/model/menu.dart';
 
 class Constants{
    static BoxDecoration shadow = BoxDecoration(
@@ -12,4 +13,6 @@ class Constants{
        ),
      ],
    );
+
+   static Category favouriteCategory;
 }

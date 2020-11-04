@@ -15,10 +15,15 @@ class MenuViewModel extends ChangeNotifier
   List<MenuModel.Category> categories;
   ViewState viewState = ViewState.INITIAL;
 
+  MenuViewModel()
+  {
+    getMenu();
+  }
+
   void getMenu()
   {
     viewState = ViewState.LOADING;
-    
+
     ApiProvider.getInstance().getMenu(onMenuFetched: (MenuModel.Menu menu){
       this.categories = menu.categories;
       notifyListeners();

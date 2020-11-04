@@ -35,13 +35,13 @@ class Category {
   int id;
   String name;
   String image;
-  List<Item> items;
+  List<Dish> items;
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
     id: json["id"],
     name: json["name"],
     image: json["image"],
-    items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+    items: List<Dish>.from(json["items"].map((x) => Dish.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -52,8 +52,8 @@ class Category {
   };
 }
 
-class Item {
-  Item({
+class Dish {
+  Dish({
     this.id,
     this.name,
     this.price,
@@ -63,6 +63,7 @@ class Item {
     this.cal,
     this.addons,
     this.variations,
+    this.isFav
   });
 
   int id;
@@ -72,10 +73,11 @@ class Item {
   String description;
   String image;
   String cal;
+  bool isFav;
   List<Addon> addons;
   List<Addon> variations;
 
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
+  factory Dish.fromJson(Map<String, dynamic> json) => Dish(
     id: json["id"],
     name: json["name"],
     price: json["price"],

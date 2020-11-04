@@ -1,15 +1,18 @@
 
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'package:max_food/utils/constants.dart';
+import 'package:max_food/viewmodel/model/menu.dart';
 import 'package:max_food/viewmodel/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:convert' as JSON;
 
 class PrefKeys
 {
   static String NAME = "name";
   static String EMAIL = "email";
   static String TOKEN = "token";
-  static String PHONE = "token";
+  static String PHONE = "phone";
+  static String FAV_DISHES = "fav_dishes";
 }
 
 class SharedPrefManager{
@@ -76,6 +79,73 @@ class SharedPrefManager{
     pref.setString(PrefKeys.TOKEN, user.token);
   }
 
+  void _saveFavourites(String dishMap) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString(PrefKeys.FAV_DISHES, dishMap);
+  }
 
+
+
+  Future<Category> getFavouriteDishes() async {
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      String dishMap = pref.getString(PrefKeys.FAV_DISHES);
+      Category category = Category.fromJson(JSON.jsonDecode(dishMap));
+      return category;
+    } catch (e) {
+
+      return Category(
+        id : -1,
+        name: "Favourites",
+        items: List()
+      );
+
+    }
+  }
+
+  void addToFavourites(Dish dishItem) async{
+
+    Category favCategory = await getFavouriteDishes();
+
+    if(favCategory==null)
+      {
+
+        List<Dish> dishes = List();
+        dishes.add(dishItem);
+
+        Category category = Category()
+        ..name = "Favourites"
+        ..id = -1
+        ..items = dishes;
+
+        _saveFavourites(JSON.jsonEncode(category));
+      }
+    else
+      {
+        favCategory.items.add(dishItem);
+        _saveFavourites(JSON.jsonEncode(favCategory));
+
+      }
+    Constants.favouriteCategory = favCategory;
+  }
+
+  void removeFromFavourites(Dish dishItem) async{
+
+    Category favCategory = await getFavouriteDishes();
+
+    if(favCategory!=null)
+    {
+
+      favCategory.items.removeWhere((dish){
+        print("${dish.id} == ${dishItem.id}");
+        return dish.id == dishItem.id;
+      });
+      _saveFavourites(JSON.jsonEncode(favCategory));
+    }
+
+    Constants.favouriteCategory = favCategory;
+    print(Constants.favouriteCategory.toJson());
+    print("Removed");
+  }
 
 }

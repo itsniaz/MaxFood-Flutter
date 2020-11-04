@@ -8,35 +8,53 @@ import 'package:max_food/screens/cart.dart';
 import 'package:max_food/screens/nav_drawer.dart';
 import 'package:max_food/screens/option.dart';
 import 'package:max_food/screens/signup.dart';
+import 'package:max_food/utils/constants.dart';
+import 'package:max_food/utils/shared_perference_manager.dart';
+import 'package:max_food/viewmodel/menu_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
+  SharedPrefManager.getInstance().getFavouriteDishes().then((category){
+    if (category!=null) {
+      Constants.favouriteCategory = category;
+    }
+    else
+      {
+
+      }
+  });
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Max Food',
-        theme: ThemeData(
-          primarySwatch: Colors.red,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-         textTheme: GoogleFonts.latoTextTheme(
-           Theme.of(context).textTheme,
-         ),
-        ),
-        routes: {
-          '/': (context) => LoginScreen(),
-          '/signup': (context) => SignUpScreen(),
-          '/login': (context) => LoginScreen(),
-          '/navigation_screen': (context) => MainNavDrawer(),
-          '/menu': (context) => MenuScreen(),
-          '/option': (context) => OptionScreen(),
-          '/cart': (context) => CartScreen(),
-          '/checkout': (context) => CheckoutScreen(),
-        },
+    return MultiProvider(
+      providers: [
+        ListenableProvider(create: (_) => MenuViewModel(),lazy: false,),
+      ],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Max Food',
+          theme: ThemeData(
+            primarySwatch: Colors.red,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+           textTheme: GoogleFonts.latoTextTheme(
+             Theme.of(context).textTheme,
+           ),
+          ),
+          routes: {
+            '/': (context) => LoginScreen(),
+            '/signup': (context) => SignUpScreen(),
+            '/login': (context) => LoginScreen(),
+            '/navigation_screen': (context) => MainNavDrawer(),
+            '/menu': (context) => MenuScreen(),
+            '/option': (context) => OptionScreen(),
+            '/cart': (context) => CartScreen(),
+            '/checkout': (context) => CheckoutScreen(),
+          },
+      ),
     );
   }
 }
