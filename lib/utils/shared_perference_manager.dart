@@ -8,11 +8,11 @@ import 'dart:convert' as JSON;
 
 class PrefKeys
 {
-  static String NAME = "name";
-  static String EMAIL = "email";
-  static String TOKEN = "token";
-  static String PHONE = "phone";
-  static String FAV_DISHES = "fav_dishes";
+  static const String NAME = "name";
+  static const String EMAIL = "email";
+  static const String TOKEN = "token";
+  static const String PHONE = "phone";
+  static const String FAV_DISHES = "fav_dishes";
 }
 
 class SharedPrefManager{
@@ -103,7 +103,7 @@ class SharedPrefManager{
     }
   }
 
-  void addToFavourites(Dish dishItem) async{
+  Future<bool> addToFavourites(Dish dishItem) async{
 
     Category favCategory = await getFavouriteDishes();
 
@@ -127,9 +127,10 @@ class SharedPrefManager{
 
       }
     Constants.favouriteCategory = favCategory;
+    return true;
   }
 
-  void removeFromFavourites(Dish dishItem) async{
+  Future<bool> removeFromFavourites(Dish dishItem) async{
 
     Category favCategory = await getFavouriteDishes();
 
@@ -137,15 +138,13 @@ class SharedPrefManager{
     {
 
       favCategory.items.removeWhere((dish){
-        print("${dish.id} == ${dishItem.id}");
         return dish.id == dishItem.id;
       });
       _saveFavourites(JSON.jsonEncode(favCategory));
     }
 
     Constants.favouriteCategory = favCategory;
-    print(Constants.favouriteCategory.toJson());
-    print("Removed");
+    return true;
   }
 
 }

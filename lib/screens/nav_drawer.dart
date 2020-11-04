@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:max_food/screens/menu.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
 import 'package:max_food/viewmodel/home_viewmodel.dart';
+import 'package:max_food/viewmodel/menu_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class MainNavDrawer extends StatefulWidget {
@@ -23,8 +25,6 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
-
 
     return ChangeNotifierProvider<HomeViewModel>(
       create: (context) => HomeViewModel(),
@@ -118,10 +118,12 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
       animationType: BadgeAnimationType.slide,
       badgeColor: Colors.white,
       badgeContent: Text(
-        "5",
+        "${Provider.of<MenuViewModel>(context).cart.length}",
         style: TextStyle(color: Colors.red),
       ),
-      child: IconButton(icon: Icon(CustomIcons.cart), onPressed: () {}),
+      child: IconButton(icon: Icon(CustomIcons.cart), onPressed: () {
+        Navigator.pushNamed(context, "/cart");
+      }),
     );
   }
 
@@ -267,7 +269,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                       child: Row(
                         children: [
                           Expanded(
-                              child: Category(home.categories[0].name,home.categories[0].image)
+                              child: Category(0,home.categories[0].name,home.categories[0].image)
                           ),
                           SizedBox(
                             width: 4,
@@ -277,7 +279,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                               child: Column(
                                 children: [
                                   Expanded(
-                                      child: Category(home.categories[1].name,home.categories[1].image)
+                                      child: Category(1,home.categories[1].name,home.categories[1].image)
                                   ),
                                   SizedBox(
                                     height: 2,
@@ -286,7 +288,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                                     child: Container(
                                       height: double.infinity,
                                       width: double.infinity,
-                                        child: Category(home.categories[2].name,home.categories[2].image)
+                                        child: Category(2,home.categories[2].name,home.categories[2].image)
                                     ),
                                   ),
                                 ],
@@ -304,7 +306,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                                     child: Container(
                                       height: double.infinity,
                                       width: double.infinity,
-                                        child: Category(home.categories[3].name,home.categories[3].image)
+                                        child: Category(3,home.categories[3].name,home.categories[3].image)
                                     ),
                                   ),
                                   SizedBox(
@@ -314,7 +316,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                                     child: Container(
                                       height: double.infinity,
                                       width: double.infinity,
-                                        child: Category(home.categories[4].name,home.categories[4].image)
+                                        child: Category(4,home.categories[4].name,home.categories[4].image)
                                     ),
                                   ),
                                 ],
@@ -373,30 +375,37 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
       );
   }
 
-  Category(String categoryName,String imageUrl){
-    return Stack(
-      children: [
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: Card(
-            color: Colors.white,
-            margin: EdgeInsets.symmetric(vertical : 4.0,horizontal: 2.0),
-            elevation: 1.0,
+  Category(int index,String categoryName,String imageUrl){
+    return InkWell(
+      onTap: (){
+        Provider.of<MenuViewModel>(context,listen: false).chosenCategoryIndex = index;
+        Navigator.pushNamed(context, "/menu",arguments: {
+        "index" : index
+        });
+      },
+      child: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Card(
+              color: Colors.white,
+              margin: EdgeInsets.symmetric(vertical : 4.0,horizontal: 2.0),
+              elevation: 1.0,
 
-            child: Container(margin: EdgeInsets.all(4.0),child: Image.network(imageUrl,width: 10,)),
+              child: Container(margin: EdgeInsets.all(4.0),child: CachedNetworkImage(imageUrl: imageUrl,placeholder: (ctx,url)=>Image.asset("assets/images/loading.gif"),)),
+            ),
           ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Container(child: Text(categoryName.toUpperCase(),textAlign: TextAlign.right,style: GoogleFonts.montserrat(
-            fontWeight: FontWeight.w600,
-            fontSize: 12,
-          ),),padding: EdgeInsets.only(top : 16.0,right:12.0,left :12.0),),
-        ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(child: Text(categoryName.toUpperCase(),textAlign: TextAlign.right,style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),),padding: EdgeInsets.only(top : 16.0,right:12.0,left :12.0),),
+          ),
 
-
-      ],
+        ],
+      ),
     );
   }
 
