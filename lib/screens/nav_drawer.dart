@@ -21,13 +21,14 @@ class MainNavDrawer extends StatefulWidget {
 
 class MainNavDrawerBody extends State<MainNavDrawer> {
 
-  HomeViewModel _homeViewModel;
 
   @override
   Widget build(BuildContext context) {
-
-    return ChangeNotifierProvider<HomeViewModel>(
-      create: (context) => HomeViewModel(),
+    Provider.of<MenuViewModel>(context,listen: false);
+    return MultiProvider(
+      providers: [
+        ListenableProvider(create: (_) => HomeViewModel(),lazy: false,),
+      ],
       child: Scaffold(
           drawer: SafeArea(
               child: Drawer(
@@ -57,12 +58,12 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Niaz Ahmed",
+                              "Test User",
                               style:
                                   TextStyle(fontSize: 16, color: Colors.black54),
                             ),
                             Text(
-                              "itsniaz@gmail.com",
+                              "testuser@gmail.com",
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
@@ -151,7 +152,6 @@ class MainNavDrawerBody extends State<MainNavDrawer> {
     );
   }
 
-
 }
 
 class LandingPageBodyWidget extends StatefulWidget{
@@ -214,7 +214,7 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
             ),
             CarouselSlider.builder(
               options: CarouselOptions(
-                aspectRatio: 16 / 7,
+                aspectRatio: 800 / 300,
                 initialPage: 0,
                 enableInfiniteScroll: true,
                 reverse: false,
@@ -222,18 +222,15 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                 autoPlayInterval: Duration(seconds: 3),
                 autoPlayAnimationDuration: Duration(milliseconds: 800),
                 autoPlayCurve: Curves.fastOutSlowIn,
-                enlargeCenterPage: false,
+                enlargeCenterPage: true,
                 scrollDirection: Axis.horizontal,
               ),
-              itemCount: sliderImages.length,
-              itemBuilder: (BuildContext context, int itemIndex) => AspectRatio(
-                  aspectRatio: 16 / 7,
-                  child: Card(
-                      child: Image.network(
-                        sliderImages[itemIndex],
-                        fit: BoxFit.cover,
-                      ))),
-            ),
+              itemCount: _homeViewModel.home.sliders.length,
+              itemBuilder: (BuildContext context, int itemIndex) =>
+                       Image.network(
+                          "${_homeViewModel.home.sliders[itemIndex].path}",
+                          fit: BoxFit.fitWidth,
+                        )),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -335,8 +332,8 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                     child: AspectRatio(
                       aspectRatio: 8/3,
                       child: Card(
-                        color: Colors.redAccent,
-                        child: Center(child: Text("Banner Here",style: TextStyle(color: Colors.white,fontSize: 18),)),
+
+                        child: CachedNetworkImage(imageUrl: _homeViewModel.home.banners[0].image,placeholder: (ctx,url)=>Image.asset("assets/images/loading.gif")),
                       ),
                     )
                 ),
@@ -356,20 +353,19 @@ class LandingPageBodyWidgetState extends State<LandingPageBodyWidget>
                   height: 190,
                   child: ListView.separated(
                       separatorBuilder: (ctx,index) => SizedBox(width: 2,),
-                      scrollDirection: Axis.horizontal,shrinkWrap: true,physics: BouncingScrollPhysics(),itemCount : 5,itemBuilder: (ctx,index){
+                      scrollDirection: Axis.horizontal,shrinkWrap: true,physics: BouncingScrollPhysics(),itemCount : _homeViewModel.home.featuredFoods.length,itemBuilder: (ctx,index){
                     return Container(
                       width: 140,
                       height: 190,
                       child: Card(
-                        child: Center(
-                          child: Text("Hot Item ${index+1}"),
+                        child: CachedNetworkImage(imageUrl: _homeViewModel.home.featuredFoods[index].image,placeholder: (ctx,url)=>Image.asset("assets/images/loading.gif")
                         ),
                       ),
                     );
                   }),
                 )
               ],
-            )
+            ),
           ],
         ),
       );

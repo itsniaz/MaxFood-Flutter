@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:max_food/network/api_provider.dart';
+import 'package:max_food/utils/constants.dart';
 import 'package:max_food/utils/custom_icons_icons.dart';
 import 'package:max_food/utils/shared_perference_manager.dart';
+import 'package:max_food/viewmodel/menu_viewmodel.dart';
 import 'package:max_food/viewmodel/model/user.dart';
+import 'package:max_food/viewmodel/user_viewmodel.dart' as uservm;
+import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -33,12 +37,33 @@ class _LoginScreenBodyState extends State<SignUpScreenBody> {
 
   bool isLoading =  false;
 
+  uservm.UserViewModel _userViewModel;
+
   @override
   Widget build(BuildContext context) {
+
+    _userViewModel = Provider.of<uservm.UserViewModel>(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      if(_userViewModel.currentState == uservm.ViewState.REGISTERED)
+      {
+        Navigator.pushNamed(context, Routes.LANDING);
+      }
+      else if(_userViewModel.currentState == uservm.ViewState.FAILED && _userViewModel.loginError.isNotEmpty)
+      {
+        Scaffold.of(context).showSnackBar(SnackBar(backgroundColor: Colors.redAccent,content: Row(children: [
+          Icon(Icons.error),
+          SizedBox(width: 8,),
+          Text(_userViewModel.loginError),
+        ],)));
+      }
+    });
+
     var EmailField =    TextFormField(
       decoration: InputDecoration(labelText: 'Email',prefixIcon: Icon(CustomIcons.mail,size: _iconSize,)),
       onSaved: (email){
-        _user.email = email;
+        _user.email = email.trim();
       },
       validator: (email)
       {
@@ -74,38 +99,13 @@ class _LoginScreenBodyState extends State<SignUpScreenBody> {
         color: Colors.redAccent,
         shape: StadiumBorder(),
         onPressed: () {
-
-          Navigator.pushNamed(context, "/navigation_screen");
-
-          // if(_formKey.currentState.validate())
-          //   {
-          //     _formKey.currentState.save();
-          //
-          //     setState(()=>isLoading = true);
-          //
-          //     ApiProvider.getInstance().authenticate(user: _user, onAuthSuccess: (User _user){
-          //
-          //       SharedPrefManager.getInstance().saveUser(_user);
-          //
-          //       setState(()=>isLoading = false);
-          //
-          //
-          //     }, onAuthFailure: (String error){
-          //
-          //       setState(()=>isLoading = false);
-          //
-          //       Scaffold.of(context).showSnackBar(SnackBar(
-          //           backgroundColor: Colors.redAccent, content: Row(
-          //         children: [
-          //           SizedBox(width: 8,),
-          //           Icon(Icons.info,color: Colors.white,),
-          //           SizedBox(width: 16,),
-          //           Text(error,style: TextStyle(color: Colors.white),)
-          //         ],
-          //       )));
-          //
-          //     });
-          //   }
+          if (_formKey.currentState.validate()) {
+            _formKey.currentState.save();
+            _userViewModel.authenticate(
+                        email: _user.email,
+                        password:  _user.password
+                      );
+          }
         },
         child: Text("Login",style: TextStyle(color: Colors.white),),
       ),
@@ -114,7 +114,7 @@ class _LoginScreenBodyState extends State<SignUpScreenBody> {
       padding: EdgeInsets.all(8.0),
       child: InkWell(child: Text("Don't have an account ?",style: TextStyle(fontSize: 16,color: Colors.black54),)
         , onTap: (){
-          Navigator.pushNamed(context,"/signup");
+          Navigator.pushNamed(context,"/register");
         },
       ),
     );
@@ -165,7 +165,12 @@ class _LoginScreenBodyState extends State<SignUpScreenBody> {
                         ),
                       ),
                       SizedBox(height: 36,),
-                      isLoading ? CircularProgressIndicator() : LoginButton,
+                      Container(
+                        height: 60,
+                        child: AnimatedSwitcher(duration: Duration(milliseconds: 300),
+                          child:  _userViewModel.currentState == uservm.ViewState.LOADING ? CircularProgressIndicator() : LoginButton,
+                        ),
+                      ),
                       SizedBox(height: 16,),
                       registerButton
                     ],

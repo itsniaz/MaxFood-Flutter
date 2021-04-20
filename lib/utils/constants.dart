@@ -16,3 +16,14 @@ class Constants{
 
    static Category favouriteCategory;
 }
+
+class Routes{
+  static const String LOGIN = "/login";
+  static const String REGISTER = "/register";
+  static const String LANDING = "/navigation_screen";
+  static const String MENU = "/menu";
+  static const String OPTION = "/option";
+  static const String CART = "/cart";
+  static const String CHECKOUT = "/checkout";
+
+}

@@ -5,57 +5,68 @@ import 'package:max_food/utils/shared_perference_manager.dart';
 
 import 'model/user.dart';
 
-
-enum ViewState{
+enum ViewState {
   INITIAL,
   LOADING,
   REGISTERED,
+  LOGGED_IN,
   FAILED,
 }
 
-class SignUpViewModel with ChangeNotifier
-{
-    ViewState currentState = ViewState.INITIAL;
-    User _user = User();
-    String error = "";
-    Map<String,dynamic> formErrors;
+class UserViewModel with ChangeNotifier {
+  ViewState currentState = ViewState.INITIAL;
+  User _user = User();
+  String signUpError = "";
+  String loginError = "";
+  Map<String, dynamic> formErrors;
 
-    User get user => _user;
+  User get user => _user;
 
-    void registerUser()
-    {
+  void registerUser() {
+    currentState = ViewState.LOADING;
+    notifyListeners();
 
+    ApiProvider.getInstance().registerUser(
+        user: user,
+        onRegisterSuccess: (User user) {
+          user = user;
+          currentState = ViewState.REGISTERED;
+          SharedPrefManager.getInstance().setEmail(email: user.email);
+          SharedPrefManager.getInstance().setName(name: user.name);
+          SharedPrefManager.getInstance().setToken(token: user.token);
+          notifyListeners();
+        },
+        onFromValueError: (errors) {
+          currentState = ViewState.FAILED;
+          formErrors = errors;
+          signUpError = "";
+          notifyListeners();
+        },
+        onRegisterFailure: (reason) {
+          currentState = ViewState.FAILED;
+          signUpError = reason;
+          notifyListeners();
+          signUpError = "";
+        });
+  }
 
-      currentState = ViewState.LOADING;
-      notifyListeners();
-
-      ApiProvider.getInstance().registerUser(
-          user: user,
-          onRegisterSuccess: (User user) {
-            user = user;
-            currentState = ViewState.REGISTERED;
-            SharedPrefManager.getInstance().setEmail(email: user.email);
-            SharedPrefManager.getInstance().setName(name: user.name);
-            SharedPrefManager.getInstance().setToken(token: user.token);
-            notifyListeners();
-          },
-          onFromValueError: (errors){
-            currentState = ViewState.FAILED;
-            formErrors = errors;
-            error= "";
-            notifyListeners();
-
-          },
-          onRegisterFailure: (reason) {
-            currentState = ViewState.FAILED;
-            error = reason;
-            notifyListeners();
-
-          });
-    }
-
-    void authenticate()
-    {
-
-    }
+  void authenticate({String email, String password}) {
+    currentState = ViewState.LOADING;
+    notifyListeners();
+    ApiProvider.getInstance().authenticate(
+        email: email,
+        password: password,
+        onAuthSuccess: (User user) async {
+          _user = user;
+          currentState = ViewState.REGISTERED;
+         await SharedPrefManager.getInstance().saveUser(user);
+         notifyListeners();
+        },
+        onAuthFailure: (String reason) {
+          loginError = reason;
+          currentState = ViewState.FAILED;
+          notifyListeners();
+          // loginError = "";
+        });
+  }
 }

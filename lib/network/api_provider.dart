@@ -78,13 +78,17 @@ class ApiProvider {
     }
   }
 
-  void authenticate({@required User user, @required OnAuthSuccess onAuthSuccess,@required OnAuthFailure onAuthFailure}) async
+  void authenticate({@required String email,@required String password, @required OnAuthSuccess onAuthSuccess,@required OnAuthFailure onAuthFailure}) async
   {
 
     try{
+      String token = await SharedPrefManager.getInstance().getToken();
       Response response  = await _dio.post("/login",
-          options: Options(headers: {"Authorization": "Bearer $tempToken"}
-          ));
+        data: {
+          "email" : email,
+          "password" : password
+        }
+      );
 
       if(response.statusCode == HttpStatus.ok)
       {
@@ -114,7 +118,7 @@ class ApiProvider {
    try{
      String token =  await SharedPrefManager.getInstance().getToken();
      Response response  = await _dio.get("/homeApi",
-         options: Options(headers: {"Authorization": "Bearer $tempToken"}
+         options: Options(headers: {"Authorization": "Bearer $token"}
      ));
 
      if(response.statusCode == HttpStatus.ok)
@@ -142,7 +146,7 @@ class ApiProvider {
     try{
       String token =  await SharedPrefManager.getInstance().getToken();
       Response response  = await _dio.get("/menusFoods",
-          options: Options(headers: {"Authorization": "Bearer $tempToken"}
+          options: Options(headers: {"Authorization": "Bearer $token"}
           ));
 
       if(response.statusCode == HttpStatus.ok)

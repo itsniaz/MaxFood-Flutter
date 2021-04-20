@@ -23,7 +23,7 @@ class User {
   String email;
   String phone;
   String password;
-  int userType;
+  dynamic userType;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     token: json["token"],

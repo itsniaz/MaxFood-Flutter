@@ -16,7 +16,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-          create: (ctx) => SignUpViewModel(), child: SignUpScreenBody()),
+          create: (ctx) => UserViewModel(), child: SignUpScreenBody()),
     );
   }
 }
@@ -35,19 +35,19 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
 
   bool isLoading = false;
 
-  SignUpViewModel _userViewModel;
+  UserViewModel _userViewModel;
 
   User user = User();
 
   @override
   Widget build(BuildContext context) {
-    _userViewModel = Provider.of<SignUpViewModel>(context);
+    _userViewModel = Provider.of<UserViewModel>(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_userViewModel.currentState == ViewState.REGISTERED) {
         Navigator.pushNamed(context, "/navigation_screen");
-      } else if (_userViewModel.currentState == ViewState.FAILED && _userViewModel.error.isNotEmpty) {
-        Fluttertoast.showToast(msg: _userViewModel.error);
+      } else if (_userViewModel.currentState == ViewState.FAILED && _userViewModel.signUpError.isNotEmpty) {
+        Fluttertoast.showToast(msg: _userViewModel.signUpError);
       }
       else if(_userViewModel.formErrors!=null)
         {
@@ -154,7 +154,7 @@ class _SignUpScreenBodyState extends State<SignUpScreenBody> {
 
   NameField({double iconSize, OnSaved onSaved}) => TextFormField(
         decoration: InputDecoration(
-            labelText: 'Username',
+            labelText: 'Name',
             prefixIcon: Icon(
               CustomIcons.user,
               size: _iconSize,

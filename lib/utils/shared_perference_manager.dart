@@ -71,12 +71,13 @@ class SharedPrefManager{
     return pref.getString(PrefKeys.PHONE);
   }
 
-  void saveUser(User user) async {
+  Future<bool> saveUser(User user) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString(PrefKeys.NAME, user.name);
     pref.setString(PrefKeys.EMAIL, user.email);
     pref.setString(PrefKeys.PHONE, user.phone);
     pref.setString(PrefKeys.TOKEN, user.token);
+    return true;
   }
 
   void _saveFavourites(String dishMap) async {

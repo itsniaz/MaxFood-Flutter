@@ -78,7 +78,7 @@ class _MenuScreenBodyState extends State<MenuScreenBody> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
 
-    _menuViewModel = Provider.of<MenuViewModel>(context,listen: false);
+    _menuViewModel = Provider.of<MenuViewModel>(context,listen: true);
     categories = _menuViewModel.categories;
     _tabController = TabController(length: categories.length, vsync: this);
 
@@ -96,7 +96,7 @@ class _MenuScreenBodyState extends State<MenuScreenBody> with TickerProviderStat
           ),
         );
       }
-
+    
 
       return Column(
             children: [
@@ -144,7 +144,7 @@ class _MenuScreenBodyState extends State<MenuScreenBody> with TickerProviderStat
                   ),
                 ),
               ),
-              CartNavigator()
+              _menuViewModel.cart.length>0 ? CartNavigator():Container()
             ],
           );
     }

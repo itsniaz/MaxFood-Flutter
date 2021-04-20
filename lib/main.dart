@@ -11,6 +11,7 @@ import 'package:max_food/screens/signup.dart';
 import 'package:max_food/utils/constants.dart';
 import 'package:max_food/utils/shared_perference_manager.dart';
 import 'package:max_food/viewmodel/menu_viewmodel.dart';
+import 'package:max_food/viewmodel/user_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ListenableProvider(create: (_) => MenuViewModel(),lazy: false,),
+        ListenableProvider(create: (_) => UserViewModel(),lazy: false,),
+        ListenableProvider(create: (_) => MenuViewModel(),lazy: true,),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
           ),
           routes: {
             '/': (context) => LoginScreen(),
-            '/signup': (context) => SignUpScreen(),
+            '/register': (context) => SignUpScreen(),
             '/login': (context) => LoginScreen(),
             '/navigation_screen': (context) => MainNavDrawer(),
             '/menu': (context) => MenuScreen(),
